@@ -104,3 +104,19 @@ class MonitorGroup(models.Model):
 
 class CPUInfo(models.Model):
     host=models.ForeignKey("Host")
+    user=models.IntegerField(max_length=5)
+    system=models.IntegerField(max_length=5)
+    nice=models.IntegerField(max_length=5)
+    idle=models.IntegerField(max_length=5)
+    wait=models.IntegerField(max_length=5)
+    hi=models.IntegerField(max_length=5)
+    si=models.IntegerField(max_length=5)
+
+class MemoryInfo(models.Model):
+    host=models.ForeignKey("Host")
+    memoryTotal=models.IntegerField(max_length=20)
+    memoryFree=models.IntegerField(max_length=20)
+    memoryUse=models.IntegerField(max_length=20)
+    memoryShare=models.IntegerField(max_length=20)
+    memoryBuffer=models.IntegerField(max_length=20)
+    memoryCache=models.IntegerField(max_length=20)
