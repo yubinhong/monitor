@@ -14,14 +14,15 @@ def get_config(request):
             hostobj=models.Host.objects.get(name=hostname)
             monitorgroup=hostobj.monitor_groups
             template=monitorgroup.templates
-            service_list=template.services.select_related()
+            trigger_list=template.trigger.select_related()
             data={}
-            for item in service_list:
-                data[item.name]=[item.plugin,item.interval]
+            for trigger in trigger_list:
+                data[trigger.service.name]=[trigger.service.plugin,trigger.item.interval]
         except Exception as e:
-            data=''
-            message='the hostname is no exists.'
-            config['message'] = message
+            #data=''
+            #message='the hostname is no exists.'
+            #config['message'] = message
+            print(e)
         config['status']='0'
         config['services']=data
         config=json.dumps(config)
@@ -34,5 +35,5 @@ def get_config(request):
 
 def report_server_data(request):
     data=request.POST.get('data',None)
-    print(data)
+    result=eval(data)
     return HttpResponse(json.dumps({'status':'ok'}))
