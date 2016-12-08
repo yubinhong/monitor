@@ -17,13 +17,13 @@ def get_config(request):
             service_list=template.services.select_related()
             data={}
             for item in service_list:
-                data[item.name]="plugin_name:"+item.plugin+",interval:"+str(item.interval)
+                data[item.name]=[item.plugin,item.interval]
         except Exception as e:
             data=''
             message='the hostname is no exists.'
             config['message'] = message
         config['status']='0'
-        config['data']=data
+        config['services']=data
         config=json.dumps(config)
         return HttpResponse(config)
     else:
@@ -31,6 +31,8 @@ def get_config(request):
         config['message']='you must input param:hostname'
         config=json.dumps(config)
         return HttpResponse(config)
+
 def report_server_data(request):
     data=request.POST.get('data',None)
-    return HttpResponse
+    print(data)
+    return HttpResponse(json.dumps({'status':'ok'}))
