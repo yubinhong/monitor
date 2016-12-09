@@ -6,40 +6,61 @@ class Items(models.Model):
     key=models.CharField(max_length=100)
     data_type_option=(('float','Float'),('str','Str'),('int','Int'))
     data_type=models.CharField(u"指标数据类型",max_length=50,choices=data_type_option,default='int')
-    interval = models.IntegerField(u"监控间隔", default=30)
     memo=models.CharField(u"备注",max_length=128,blank=True,null=True)
     def __str__(self):
         return "%s.%s" %(self.name,self.key)
     class Meta:
         verbose_name=u"监控指标"
         verbose_name_plural=u"监控指标"
+
+
 class Services(models.Model):
     monitor_type_list=(('agent','Agent'),('snmp','SNMP'))
     monitor_type=models.CharField(max_length=50,choices=monitor_type_list)
     name=models.CharField(u"服务名称",max_length=50,unique=True)
-    plugin=models.CharField(u"插件名",max_length=100)
-    #interval=models.IntegerField(u"监控间隔",default=30)
+    service_type=models.ForeignKey("ServiceType",verbose_name=u"服务类型")
+    #plugin=models.CharField(u"插件名",max_length=100)
+    interval=models.IntegerField(u"监控间隔",default=30)
     #items=models.ForeignKey('Items',verbose_name=u"指标列表",blank=True)
     #trigger=models.ManyToManyField('Trigger',verbose_name=u"关联触发器",blank=True)
     memo=models.CharField(u"备注",max_length=128,blank=True,null=True)
+
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name=u"服务"
+        verbose_name_plural=u"服务"
+
+
+class ServiceType(models.Model):
+    name=models.CharField(u"类型名称",max_length=50,unique=True)
+    plugin = models.CharField(u"插件名", max_length=100)
+
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name=u"服务类型"
         verbose_name_plural=u"服务类型"
+
+
 class Templates(models.Model):
     name=models.CharField(u"模版名称",max_length=50)
     services=models.ManyToManyField('Services',verbose_name=u"服务列表")
     trigger = models.ManyToManyField('Trigger', verbose_name=u"关联触发器", blank=True)
+
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name=u"配置模版"
         verbose_name_plural = u"配置模版"
 
+
 class Trigger(models.Model):
     name=models.CharField(u"触发器名称",max_length=64)
-    service=models.ForeignKey("Services",verbose_name=u"关联服务")
+    service=models.ForeignKey("ServiceType",verbose_name=u"关联服务类型")
     serverity_choices=(
         ('1','unknow'),
         ('2','warning'),
@@ -58,6 +79,7 @@ class Trigger(models.Model):
     )
     data_calc_func=models.CharField(u"数据处理方式",choices=data_calc_type_choices,max_length=64)
     threshold=models.IntegerField(u"阀值")
+
     def __str__(self):
         return "%s.%s.%s.%s" % (self.item,self.data_calc_func,self.operator_type,self.threshold)
 
@@ -65,11 +87,14 @@ class Trigger(models.Model):
         verbose_name=u"触发器"
         verbose_name_plural = u"触发器"
 
+
 class HostGroup(models.Model):
     name=models.CharField(u"主机组名",max_length=64,unique=True)
     memo=models.TextField(u"备注",blank=True,null=True)
+
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name=u"主机组"
         verbose_name_plural = u"主机组"
@@ -89,21 +114,27 @@ class Host(models.Model):
     host_alive_check_interval=models.IntegerField(u'主机存活状态检测间隔',default=30)
     status=models.IntegerField(u'状态',choices=status_choices,default=1)
     memo=models.TextField(u'备注',blank=True,null=True)
+
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name=u"主机"
         verbose_name_plural=u"主机"
+
 
 class MonitorGroup(models.Model):
     name=models.CharField(u"监控组名",max_length=64,unique=True)
     templates=models.ForeignKey("Templates",blank=True)
     memo=models.TextField(u"备注",blank=True,null=True)
+
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name=u"监控组"
         verbose_name_plural = u"监控组"
+
 
 class CPUInfo(models.Model):
     host=models.ForeignKey("Host")
@@ -113,6 +144,7 @@ class CPUInfo(models.Model):
     idle=models.FloatField()
     wait=models.FloatField()
     steal=models.FloatField()
+
 
 class MemoryInfo(models.Model):
     host=models.ForeignKey("Host")

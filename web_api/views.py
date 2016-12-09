@@ -14,14 +14,14 @@ def get_config(request):
             hostobj=models.Host.objects.get(name=hostname)
             monitorgroup=hostobj.monitor_groups
             template=monitorgroup.templates
-            trigger_list=template.trigger.select_related()
+            services_list=template.services.select_related()
             data={}
-            for trigger in trigger_list:
-                data[trigger.service.name]=[trigger.service.plugin,trigger.item.interval]
+            for service in services_list:
+                data[service.service_type.name]=[service.service_type.plugin,service.interval]
         except Exception as e:
-            #data=''
-            #message='the hostname is no exists.'
-            #config['message'] = message
+            data=''
+            message='the hostname is no exists.'
+            config['message'] = message
             print(e)
         config['status']='0'
         config['services']=data
