@@ -34,6 +34,34 @@ def get_config(request):
         return HttpResponse(config)
 
 def report_server_data(request):
+    result={'status':0,'message':''}
     data=request.POST.get('data',None)
-    result=eval(data)
-    return HttpResponse(json.dumps({'status':'ok'}))
+    service_name=request.POST.get('service_name',None)
+    hostname=request.POST.get('hostname',None)
+    data=eval(data)
+    try:
+        hostobj = models.Host.objects.get(name=hostname)
+        if service_name=='CPU':
+           cpuobj=models.CPUInfo(host=hostobj,
+                                 system=data['system'],
+                                 steal=data['steal'],
+                                 idle=data['idle'],
+                                 iowait=data['iowait'],
+                                 user=data['user'],
+                                 nice=data['nice'])
+           cpuobj.save()
+        elif service_name=='Memory':
+            memobj=models.MemoryInfo(host=hostobj,
+                                     MemFree=data['MemFree'],
+                                     Cached=data['Cached'],
+                                     Buffers=data['Buffers'],
+                                     MemUsage=data['MemUsage'],
+                                     MemUsage_p=data['MemUsage_p'],
+                                     MemTotal=data['MemTotal'])
+            memobj.save()
+
+    except Exception as e:
+        result['status']=1
+        result['message']=str(e)
+        print(e)
+    return HttpResponse(json.dumps(result))

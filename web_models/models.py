@@ -137,20 +137,20 @@ class MonitorGroup(models.Model):
 
 
 class CPUInfo(models.Model):
-    host=models.ForeignKey("Host")
-    user=models.FloatField()
-    system=models.FloatField()
-    nice=models.FloatField()
-    idle=models.FloatField()
-    wait=models.FloatField()
-    steal=models.FloatField()
+    host = models.ForeignKey("Host")
+    user = models.FloatField()
+    system = models.FloatField()
+    nice = models.FloatField()
+    idle = models.FloatField()
+    iowait = models.FloatField()
+    steal = models.FloatField()
 
 
 class MemoryInfo(models.Model):
     host=models.ForeignKey("Host")
-    memoryTotal=models.IntegerField()
-    memoryFree=models.IntegerField()
-    memoryUse=models.IntegerField()
-    memoryShare=models.IntegerField()
-    memoryBuffer=models.IntegerField()
-    memoryCache=models.IntegerField()
+    MemTotal=models.IntegerField()
+    MemFree=models.IntegerField()
+    MemUsage=models.IntegerField()
+    MemUsage_p=models.IntegerField()
+    Buffers=models.IntegerField()
+    Cached=models.IntegerField()
