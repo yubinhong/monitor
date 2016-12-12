@@ -125,8 +125,10 @@ class Host(models.Model):
 
 class MonitorGroup(models.Model):
     name=models.CharField(u"监控组名",max_length=64,unique=True)
-    templates=models.ForeignKey("Templates",blank=True)
+    templates=models.ForeignKey("Templates",blank=True,verbose_name=u"关联模版")
+    user = models.ForeignKey("UserInfo", verbose_name=u"监控人")
     memo=models.TextField(u"备注",blank=True,null=True)
+
 
     def __str__(self):
         return self.name
@@ -156,3 +158,29 @@ class MemoryInfo(models.Model):
     Buffers=models.IntegerField()
     Cached=models.IntegerField()
     create_date = models.DateTimeField(auto_now_add=True)
+
+
+class UserInfo(models.Model):
+    name=models.CharField(u"用户名",max_length=50)
+    mobile=models.CharField(u"手机",max_length=12,unique=True)
+    email=models.EmailField(u"邮箱",max_length=50,unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name=u"用户信息"
+        verbose_name_plural=u"用户信息"
+
+
+class Admin(models.Model):
+    user=models.OneToOneField(UserInfo,verbose_name=u"关联用户")
+    username=models.CharField(u"登录名",unique=True,max_length=50)
+    password=models.CharField(u"密码",max_length=16)
+
+    def __str__(self):
+        return self.username
+
+    class Meta:
+        verbose_name=u"登录帐号"
+        verbose_name_plural=u"登录帐号"

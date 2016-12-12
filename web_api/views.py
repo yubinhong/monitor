@@ -1,23 +1,20 @@
 from django.shortcuts import render,HttpResponse
-from web_models import models
+#from web_models import models
+from backends.insert_data import insert_report_data
+from backends.select_data import select_config_data
 import json
 # Create your views here.
 def index(request):
     print(type(request))
     return HttpResponse('ok')
 
+
 def get_config(request):
     config={'message':""}
     hostname=request.GET.get('hostname',None)
     if hostname:
         try:
-            hostobj=models.Host.objects.get(name=hostname)
-            monitorgroup=hostobj.monitor_groups
-            template=monitorgroup.templates
-            services_list=template.services.select_related()
-            data={}
-            for service in services_list:
-                data[service.service_type.name]=[service.service_type.plugin,service.interval]
+            data=select_config_data(hostname)
         except Exception as e:
             data=''
             message='the hostname is no exists.'
@@ -33,33 +30,16 @@ def get_config(request):
         config=json.dumps(config)
         return HttpResponse(config)
 
+
 def report_server_data(request):
     result={'status':0,'message':''}
     data=request.POST.get('data',None)
     service_name=request.POST.get('service_name',None)
     hostname=request.POST.get('hostname',None)
     data=eval(data)
+    print(data)
     try:
-        hostobj = models.Host.objects.get(name=hostname)
-        if service_name=='CPU':
-           cpuobj=models.CPUInfo(host=hostobj,
-                                 system=data['system'],
-                                 steal=data['steal'],
-                                 idle=data['idle'],
-                                 iowait=data['iowait'],
-                                 user=data['user'],
-                                 nice=data['nice'])
-           cpuobj.save()
-        elif service_name=='Memory':
-            memobj=models.MemoryInfo(host=hostobj,
-                                     MemFree=data['MemFree'],
-                                     Cached=data['Cached'],
-                                     Buffers=data['Buffers'],
-                                     MemUsage=data['MemUsage'],
-                                     MemUsage_p=data['MemUsage_p'],
-                                     MemTotal=data['MemTotal'])
-            memobj.save()
-
+        insert_report_data(hostname,service_name,data)
     except Exception as e:
         result['status']=1
         result['message']=str(e)
