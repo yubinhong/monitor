@@ -4,6 +4,7 @@ from django.db import models
 class Items(models.Model):
     name=models.CharField(max_length=50,unique=True)
     key=models.CharField(max_length=100)
+    #key的名称要与资源表中（如：CPUInfo）的字段对应
     data_type_option=(('float','Float'),('str','Str'),('int','Int'))
     data_type=models.CharField(u"指标数据类型",max_length=50,choices=data_type_option,default='int')
     memo=models.CharField(u"备注",max_length=128,blank=True,null=True)

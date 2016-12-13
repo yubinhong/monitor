@@ -1,7 +1,9 @@
 from django.shortcuts import render,HttpResponse
 #from web_models import models
 from backends.insert_data import insert_report_data
-from backends.select_data import select_config_data
+from backends.select_data import select_config_data,select_email
+from backends.check_data import check_report_data
+from backends.alert import send_mail
 import json
 # Create your views here.
 def index(request):
@@ -40,6 +42,11 @@ def report_server_data(request):
     print(data)
     try:
         insert_report_data(hostname,service_name,data)
+        result=check_report_data(service_name,hostname,data)
+        if result['status']:
+            email=select_email(hostname)
+            for content in result['message']:
+                send_mail([email],'alert',content)
     except Exception as e:
         result['status']=1
         result['message']=str(e)
