@@ -2,6 +2,9 @@
 #-*- coding:utf-8 -*-
 from web_models import models
 import operator
+from backends.select_data import select_failcount
+from backends.insert_data import insert_alert
+from backends.update_data import update_alert
 def check_report_data(service_type,hostname,data):
     result={'status':0,'message':[]}
     #hostobj=models.Host.objects.get(name=hostname)
@@ -14,8 +17,15 @@ def check_report_data(service_type,hostname,data):
         cmp=getattr(operator,trigger.operator_type)
         status=cmp(float(data[trigger.item.key]),float(trigger.threshold))
         if status:
-            result['message'].append('The host %s %s of %s is %s.' %
+            fail_count=select_failcount(hostname,trigger)
+            fail_count +=1
+            if fail_count >=trigger.count:
+                result['message'].append('The host %s %s of %s is %s.' %
                                      (hostname,trigger.item.key,service_type,data[trigger.item.key]))
+            update_alert(hostname=hostname,trigger=trigger,fail_count=fail_count)
+        else:
+            update_alert(hostname=hostname, trigger=trigger, fail_count=0)
+
 
     if len(result['message'])>0:
         result['status']=1

@@ -21,3 +21,8 @@ def insert_report_data(hostname,service_name,data):
                                  MemUsage_p=data['MemUsage_p'],
                                  MemTotal=data['MemTotal'])
         memobj.save()
+
+
+def insert_alert(hostname,trigger,fail_count):
+    alertobj=models.Alert(hostname=hostname,trigger=trigger,fail_count=fail_count)
+    alertobj.save()

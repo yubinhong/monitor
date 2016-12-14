@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class Items(models.Model):
     name=models.CharField(max_length=50,unique=True)
-    key=models.CharField(max_length=100)
+    key=models.CharField(max_length=100,help_text="key的名称要与资源表中（如：CPUInfo）的字段对应")
     #key的名称要与资源表中（如：CPUInfo）的字段对应
     data_type_option=(('float','Float'),('str','Str'),('int','Int'))
     data_type=models.CharField(u"指标数据类型",max_length=50,choices=data_type_option,default='int')
@@ -70,6 +70,7 @@ class Trigger(models.Model):
     )
     item=models.ForeignKey('Items',verbose_name=u"关联监控指标")
     serverity=models.CharField(u"告警级别",choices=serverity_choices,max_length=64)
+    count=models.IntegerField(u"失败次数",default=4,help_text="失败多少次告警")
     operator_type_choices=(('eq','='),('lt','<'),('gt','>'))
     operator_type=models.CharField(u"运算符",choices=operator_type_choices,max_length=64)
     data_calc_type_choices=(
@@ -185,3 +186,9 @@ class Admin(models.Model):
     class Meta:
         verbose_name=u"登录帐号"
         verbose_name_plural=u"登录帐号"
+
+#统计失败次数
+class Alert(models.Model):
+    hostname=models.CharField(max_length=64)
+    trigger=models.ForeignKey("Trigger")
+    fail_count=models.IntegerField()

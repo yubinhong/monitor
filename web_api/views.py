@@ -42,11 +42,12 @@ def report_server_data(request):
     print(data)
     try:
         insert_report_data(hostname,service_name,data)
-        result=check_report_data(service_name,hostname,data)
-        if result['status']:
+        re=check_report_data(service_name,hostname,data)
+        if re['status']:
             email=select_email(hostname)
-            for content in result['message']:
+            for content in re['message']:
                 send_mail([email],'alert',content)
+
     except Exception as e:
         result['status']=1
         result['message']=str(e)
