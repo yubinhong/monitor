@@ -6,10 +6,6 @@ from backends.check_data import check_report_data
 from backends.alert import send_mail
 import json
 # Create your views here.
-def index(request):
-    print(type(request))
-    return HttpResponse('ok')
-
 
 def get_config(request):
     config={'message':""}
