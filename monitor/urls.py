@@ -19,5 +19,11 @@ from web_manage import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^index/',views.index),
-    url(r'^api/',include('web_api.urls'))
+    url(r'login/',views.login),
+    url(r'^api/',include('web_api.urls')),
+    url(r'dashboard/$',views.dashboard,name='dashboard'),
+    url(r'triggers/$',views.triggers,name='triggers'),
+    url(r'hosts/$',views.hosts ,name='hosts'),
+    url(r'hosts/(\d+)/$',views.host_detail ,name='host_detail'),
+    url(r'logout/$',views.logout)
 ]
