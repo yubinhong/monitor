@@ -1,5 +1,6 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from web_models import models
+import json
 # Create your views here.
 
 
@@ -58,3 +59,7 @@ def hosts(request):
 def host_detail(request,host_id):
     host_obj = models.Host.objects.get(id=host_id)
     return render(request,'monitor/host_detail.html',{'host_obj':host_obj})
+
+
+def get_hosts_status(request):
+    return HttpResponse(json.dumps([]))

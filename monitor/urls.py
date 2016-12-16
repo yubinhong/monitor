@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'triggers/$',views.triggers,name='triggers'),
     url(r'hosts/$',views.hosts ,name='hosts'),
     url(r'hosts/(\d+)/$',views.host_detail ,name='host_detail'),
-    url(r'logout/$',views.logout)
+    url(r'logout/$',views.logout),
+    url(r'get_hosts_status/$',views.get_hosts_status,name='get_hosts_status')
 ]

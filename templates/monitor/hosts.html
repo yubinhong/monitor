@@ -54,8 +54,8 @@
                     {% for host in host_list %}
                         <tr host-id="{{ host.id }}">
                             <td data-type="name"><a href="{% url 'host_detail' host.id %}" > {{ host.name }}({{ host.ip_addr }}) </a> </td>
-                            <td data-type="services">{{ host.get_status_display }}</td>
-                            <td data-type="status">{{ host.get_status_display }}</td>
+                            <td data-type="services"></td>
+                            <td data-type="status"></td>
                             <td data-type="uptime">loading...</td>
                             <td    onmouseover="ShowTriggerDetail({{ host.id }}, 5)" data-type="5" >
 
