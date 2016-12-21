@@ -14,7 +14,7 @@
         <!--Nav Tabs-->
         <ul class="nav nav-tabs">
             <li class="active">
-                <a data-toggle="tab" href="#triggers-tab" aria-expanded="false">已触发事件<span class="badge badge-purple">27</span></a>
+                <a data-toggle="tab" href="#triggers-tab" aria-expanded="false">已触发事件<span class="badge badge-purple">{{ count }}</span></a>
             </li>
             <li class="">
                 <a data-toggle="tab" href="#host-graphs" aria-expanded="false">趋势图</a>
@@ -51,7 +51,7 @@
 <script src="/static/plugins/highstock/js/highstock.js"></script>
 <script>
 function LoadHostTriggers(){
-    $("#triggers-tab").load("{% url 'trigger_list' %}?by_host_id={{ host_obj.id }}");
+    $("#triggers-tab").load("{% url 'trigger_list' %}?by_host_name={{ host_obj.name }}");
 }
 
 function LoadHostGraphs(time_range){
@@ -245,7 +245,7 @@ $(document).ready(function(){
     LoadHostGraphs('latest');
     var refresh_triggers = setInterval(function(){
         LoadHostTriggers();
-    },5000);
+    },60000);
 
 
 

@@ -5,6 +5,7 @@ import operator
 from backends.select_data import select_failcount
 from backends.insert_data import insert_alert
 from backends.update_data import update_alert
+from backends.delete_data import delete_alert
 def check_report_data(service_type,hostname,data):
     result={'status':0,'message':[]}
     #hostobj=models.Host.objects.get(name=hostname)
@@ -19,12 +20,13 @@ def check_report_data(service_type,hostname,data):
         if status:
             fail_count=select_failcount(hostname,trigger)
             fail_count +=1
+            message = 'The host %s %s of %s is %s%%.' % \
+                      (hostname, trigger.item.key, service_type, data[trigger.item.key])
+            update_alert(hostname=hostname, trigger=trigger, fail_count=fail_count, message=message)
             if fail_count >=trigger.count:
-                result['message'].append('The host %s %s of %s is %s%%.' %
-                                     (hostname,trigger.item.key,service_type,data[trigger.item.key]))
-            update_alert(hostname=hostname,trigger=trigger,fail_count=fail_count)
+                result['message'].append(message)
         else:
-            update_alert(hostname=hostname, trigger=trigger, fail_count=0)
+            delete_alert(hostname=hostname, trigger=trigger)
 
 
     if len(result['message'])>0:

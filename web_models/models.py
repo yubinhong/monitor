@@ -108,13 +108,13 @@ class Host(models.Model):
     host_groups=models.ManyToManyField("HostGroup",verbose_name=u"所属主机组",blank=True)
     monitor_groups = models.ForeignKey("MonitorGroup", verbose_name=u"所属监控组", blank=True)
     status_choices=(
-        (1,'online'),
-        (2,'down'),
-        (3,'Unreachable'),
-        (4,'Problem'),
+        ('online','online'),
+        ('down','down'),
+        ('Unreachable','Unreachable'),
+        ('Problem','Problem'),
     )
     host_alive_check_interval=models.IntegerField(u'主机存活状态检测间隔',default=30)
-    status=models.IntegerField(u'状态',choices=status_choices,default=1)
+    status=models.CharField(u'状态',max_length=20,choices=status_choices,default='online')
     memo=models.TextField(u'备注',blank=True,null=True)
 
     def __str__(self):
@@ -128,7 +128,7 @@ class Host(models.Model):
 class MonitorGroup(models.Model):
     name=models.CharField(u"监控组名",max_length=64,unique=True)
     templates=models.ForeignKey("Templates",blank=True,verbose_name=u"关联模版")
-    user = models.ForeignKey("UserInfo", verbose_name=u"监控人")
+    user = models.OneToOneField("UserInfo", verbose_name=u"监控人")
     memo=models.TextField(u"备注",blank=True,null=True)
 
 
@@ -187,8 +187,13 @@ class Admin(models.Model):
         verbose_name=u"登录帐号"
         verbose_name_plural=u"登录帐号"
 
-#统计失败次数
+#记录告警信息
 class Alert(models.Model):
     hostname=models.CharField(max_length=64)
     trigger=models.ForeignKey("Trigger")
     fail_count=models.IntegerField()
+    message=models.CharField(max_length=64,default='',blank=True,null=True)
+    alert_time=models.DateTimeField(auto_now_add=True)
+    latest_time=models.DateTimeField(auto_now=True)
+
+
