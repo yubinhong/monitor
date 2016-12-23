@@ -27,3 +27,23 @@ def select_failcount(hostname,triggerobj):
         insert_alert(hostname=hostname, trigger=triggerobj,fail_count=fail_count)
 
     return fail_count
+
+
+def select_graph(host_id):
+    result={}
+    hostobj=models.Host.objects.get(id=host_id)
+    cpu_list=models.CPUInfo.objects.filter(host=hostobj)
+    mem_list=models.MemoryInfo.objects.filter(host=hostobj)
+    trigger_list=hostobj.monitor_groups.templates.trigger.select_related()
+    for trigger in trigger_list:
+        data={}
+        data[trigger.item.key] = []
+        if trigger.service.name=='CPU':
+            for i in cpu_list:
+                data[trigger.item.key].append(getattr(i,trigger.item.key))
+            result[trigger.service.name]=data
+        elif trigger.service.name=='Memory':
+            for i in mem_list:
+                data[trigger.item.key].append(getattr(i, trigger.item.key))
+            result[trigger.service.name] = data
+    return result

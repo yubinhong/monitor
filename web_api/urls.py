@@ -17,6 +17,6 @@ from django.conf.urls import url
 from web_api import views
 urlpatterns = [
     url(r'^get_config/',views.get_config),
-    url(r'^report_server_data/',views.report_server_data)
-
+    url(r'^report_server_data/',views.report_server_data),
+    url(r'graphs/$', views.graphs_gerator, name='get_graphs')
 ]

@@ -55,75 +55,11 @@ function LoadHostTriggers(){
 }
 
 function LoadHostGraphs(time_range){
-    var graph_data = {};
+    //var graph_data = {};
     $.getJSON("{% url 'get_graphs' %}",{host_id:"{{ host_obj.id }}",time_range:time_range},function(callback){
         //console.log(callback);
-        if (time_range == 'latest'){
-            $.each(callback,function(service_id,val){
-                //console.log(val);
-                if (!val.has_sub_service){ //cpu .mem .,has no sub service
-                    graph_data[val.name] = {}
-                    for (index in val.items){
-                        graph_data[val.name][ val.items[index]] = [];
-                    }
-                }else{ //has 多网卡等
-                    console.log("sub service raw data length:" + val.raw_data.length);
-                    if (val.raw_data.length > 1){ //第一个值不能用,你懂的
-                        var service_latest_point = JSON.parse( val.raw_data[ val.raw_data.length -1 ]  )[0] ;
-                        $.each(service_latest_point.data,function(key,item_val){
-                            var service_key = val.name + '_'+key;
-                            //console.log(service_key);
-                            graph_data[service_key] = {}
-                            for (index in val.items){
-                                graph_data[service_key][ val.items[index]] = [];
-                            }
-                        });//end each
-                    }
-                }
 
-            });//end each
-            //上面那段循环是为了生成适应画图的数据结构,接下来开始把画图的数据填充进去
-            $.each(callback,function(service_id,val){
-                if (val.raw_data.length >1){
-                    if(!val.has_sub_service){ //没有子服务
-                        for (i in val.raw_data){ //第一个不能用
-                            if (i>0){
-                                var data = JSON.parse(val.raw_data[i]); //[object,timestamp]
-                                //console.log(data);
-
-                                for (j in val.items){
-                                    var service_item_key = val.items[j];
-                                    //console.log( service_item_key + data[0][service_item_key] );
-                                    graph_data[val.name][service_item_key].push([data[1]*1000, parseInt(data[0][service_item_key])]);
-                                }
-                            }
-                        }//end for (i in val.raw_data)
-                    }else {//有子服务
-                        for (i in val.raw_data){
-                            if (i>0){
-                                var sub_service_data = JSON.parse(val.raw_data[i]);
-
-                                //console.log(sub_service_data[0].data);
-                                //
-                                $.each(sub_service_data[0].data,function(item_key,item_val){
-                                    //console.log(item_key);
-                                    //console.log(item_val);
-                                    var service_key = val.name + '_'+item_key;
-                                    for ( index_key in  item_val){
-                                        //console.log(service_key +'--'+index_key + '--' + item_val[index_key]);
-                                        graph_data[service_key][index_key].push( [sub_service_data[1]*1000, parseInt(item_val[index_key] )]);
-                                    }
-                                });//end each
-
-                            }
-                        }
-
-                    }
-                }
-
-            });//end each 2
-        }
-
+        var graph_data=callback
         console.log(graph_data);
         CreateGraphs(graph_data);
     });//end getjson

@@ -1,7 +1,7 @@
 from django.shortcuts import render,HttpResponse
-#from web_models import models
+from web_models import models
 from backends.insert_data import insert_report_data
-from backends.select_data import select_config_data,select_email
+from backends.select_data import select_config_data,select_email,select_graph
 from backends.check_data import check_report_data
 from backends.alert import send_mail
 import json
@@ -48,4 +48,9 @@ def report_server_data(request):
         result['status']=1
         result['message']=str(e)
         print(e)
+    return HttpResponse(json.dumps(result))
+
+def graphs_gerator(request):
+    host_id=request.GET.get('host_id')
+    result=select_graph(host_id)
     return HttpResponse(json.dumps(result))

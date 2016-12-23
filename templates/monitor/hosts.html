@@ -54,7 +54,7 @@
                                     {{ service.name }}
                                 {% endfor %}
                             </td>
-                            <td data-type="status">{{ host.status }}</td>
+                            <td data-type="status">loading...</td>
                             <td data-type="uptime">loading...</td>
                             <td data-type="last_update">loading...</td>
                         </tr>
@@ -85,7 +85,21 @@ function get_hosts_status(){
         url:'/get_hosts_status/',
         type:'GET',
         success:function(callback){
-            console.log(callback);
+            //console.log(callback)
+            var callback=jQuery.parseJSON(callback);
+            $.each(callback,function (i,host) {
+                //console.log(host.id)
+                var host_html_ele=$("#host_status_list tr[host-id='"+host.id+"']");
+                $(host_html_ele).find("td[data-type='status']").text(host.status);
+                var status_dic ={
+                    'online':'alert-success',
+                    'down':'alert-danger',
+                    'Unreachable':'alert-danger',
+                    'Problem':'alert-warning',
+                }
+                var status_class = status_dic[host.status];
+                $(host_html_ele).find("td[data-type='status']").attr('class',status_class);
+            })
         }
     });
 }

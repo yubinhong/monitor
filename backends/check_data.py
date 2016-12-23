@@ -2,6 +2,8 @@
 #-*- coding:utf-8 -*-
 from web_models import models
 import operator
+import os
+import subprocess
 from backends.select_data import select_failcount
 from backends.insert_data import insert_alert
 from backends.update_data import update_alert
@@ -33,3 +35,17 @@ def check_report_data(service_type,hostname,data):
         result['status']=1
 
     return result
+
+def check_alive(ipaddr):
+    hostobj = models.Host.objects.get(ip_addr=ipaddr)
+    if os.name=='nt':
+        result=subprocess.getstatusoutput('ping -n 1 -w 3 %s' % (ipaddr))
+    elif os.name=='posix':
+        result=subprocess.getstatusoutput('ping -c 1 -w 3 %s' % (ipaddr))
+    if result[0]:
+        hostobj.status='down'
+        hostobj.save()
+    else:
+        hostobj.status='online'
+        hostobj.save()
+    return hostobj.status

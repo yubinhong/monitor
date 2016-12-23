@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,HttpResponse
 from web_models import models
 from backends.select_data import select_config_data
+from backends.check_data import check_alive
 import json
 # Create your views here.
 
@@ -83,7 +84,8 @@ def get_hosts_status(request):
         #monitorgroup=models.MonitorGroup.objects.get(user=userobj)
         host_list=models.Host.objects.filter(monitor_groups__user__admin__id=uid)
         for host in host_list:
-            data.append({'id':host.id,'status':host.status})
+            status=check_alive(host.ip_addr)
+            data.append({'id':host.id,'status':status})
     return HttpResponse(json.dumps(data))
 
 
@@ -92,5 +94,3 @@ def trigger_list(request):
     trigger_data=models.Alert.objects.filter(hostname=hostname)
     return render(request,'monitor/trigger_list.html',{'trigger_list':trigger_data})
 
-def graphs_gerator(request):
-    pass
