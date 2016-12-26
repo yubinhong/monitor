@@ -48,7 +48,9 @@
 {% endblock %}
 
 {% block bottom-js %}
+
 <script src="/static/plugins/highstock/js/highstock.js"></script>
+
 <script>
 function LoadHostTriggers(){
     $("#triggers-tab").load("{% url 'trigger_list' %}?by_host_name={{ host_obj.name }}");
@@ -119,7 +121,8 @@ function CreateSingleGraph(service_name,service_data,graph_ele_id){
                         type: 'all',
                         count: 1,
                         text: 'All'
-                    }]
+                    }],
+
                 },
 
                 legend: {
@@ -187,7 +190,7 @@ $(document).ready(function(){
 
     Highcharts.setOptions({
         global: {
-            useUTC: true
+            useUTC: false
         }
     });
 

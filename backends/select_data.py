@@ -2,6 +2,7 @@
 #-*- coding:utf-8 -*-
 from web_models import models
 from backends.insert_data import insert_alert
+import time
 def select_config_data(hostname):
     #hostobj = models.Host.objects.get(name=hostname)
     #monitorgroup = hostobj.monitor_groups
@@ -40,10 +41,10 @@ def select_graph(host_id):
         data[trigger.item.key] = []
         if trigger.service.name=='CPU':
             for i in cpu_list:
-                data[trigger.item.key].append(getattr(i,trigger.item.key))
+                data[trigger.item.key].append([time.mktime(i.create_date.timetuple()),getattr(i,trigger.item.key)])
             result[trigger.service.name]=data
         elif trigger.service.name=='Memory':
             for i in mem_list:
-                data[trigger.item.key].append(getattr(i, trigger.item.key))
+                data[trigger.item.key].append([time.mktime(i.create_date.utctimetuple()),getattr(i, trigger.item.key)])
             result[trigger.service.name] = data
     return result
