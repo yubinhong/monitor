@@ -41,10 +41,10 @@ def select_graph(host_id):
         data[trigger.item.key] = []
         if trigger.service.name=='CPU':
             for i in cpu_list:
-                data[trigger.item.key].append([time.mktime(i.create_date.timetuple()),getattr(i,trigger.item.key)])
+                data[trigger.item.key].append([int(i.create_date)*1000,getattr(i,trigger.item.key)])
             result[trigger.service.name]=data
         elif trigger.service.name=='Memory':
             for i in mem_list:
-                data[trigger.item.key].append([time.mktime(i.create_date.utctimetuple()),getattr(i, trigger.item.key)])
+                data[trigger.item.key].append([int(i.create_date)*1000,getattr(i, trigger.item.key)])
             result[trigger.service.name] = data
     return result

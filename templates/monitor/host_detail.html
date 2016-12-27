@@ -122,7 +122,12 @@ function CreateSingleGraph(service_name,service_data,graph_ele_id){
                         count: 1,
                         text: 'All'
                     }],
+                    inputDateFormat:"%Y-%m-%d",
 
+                },
+
+                navigator: {
+                    enabled: true   //设为false，清空series后再次添加后不会出现navigator的时间从1970年开始
                 },
 
                 legend: {
@@ -163,10 +168,12 @@ function CreateSingleGraph(service_name,service_data,graph_ele_id){
         };
     $.each(service_data, function (item_name, item_data) {
         //$.getJSON('http://www.hcharts.cn/datas/jsonp.php?filename=' + name.toLowerCase() + '-c.json&callback=?',    function (data) {
+
             seriesOptions.push({
                 name: item_name,
-                data: item_data
+                data: item_data,
             });
+
             // As we're loading the data asynchronously, we don't know what order it will arrive. So
             // we keep a counter and create the chart when all the data is loaded.
             /*seriesCounter += 1;

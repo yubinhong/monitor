@@ -148,7 +148,7 @@ class CPUInfo(models.Model):
     idle = models.FloatField()
     iowait = models.FloatField()
     steal = models.FloatField()
-    create_date=models.DateTimeField(auto_now_add=True)
+    create_date=models.FloatField()
 
 
 class MemoryInfo(models.Model):
@@ -159,7 +159,7 @@ class MemoryInfo(models.Model):
     MemUsage_p=models.IntegerField()
     Buffers=models.IntegerField()
     Cached=models.IntegerField()
-    create_date = models.DateTimeField(auto_now_add=True)
+    create_date = models.FloatField()
 
 
 class UserInfo(models.Model):
