@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,HttpResponse
 from web_models import models
 from backends.select_data import select_config_data
-from backends.check_data import check_alive
+
 import json
 # Create your views here.
 
@@ -75,18 +75,7 @@ def host_detail(request,host_id):
     return render(request,'monitor/host_detail.html',{'host_obj':host_obj,'monitored_services':monitored_services,'count':count})
 
 
-def get_hosts_status(request):
-    uid=request.session.get('current_user_id',None)
-    data=[]
-    if uid:
-        #host_list=models.Admin.objects.get(id=uid).select_related().select_related()
-        #userobj=models.Admin.objects.get(id=uid).user
-        #monitorgroup=models.MonitorGroup.objects.get(user=userobj)
-        host_list=models.Host.objects.filter(monitor_groups__user__admin__id=uid)
-        for host in host_list:
-            status=check_alive(host.ip_addr)
-            data.append({'id':host.id,'status':status})
-    return HttpResponse(json.dumps(data))
+
 
 
 def trigger_list(request):

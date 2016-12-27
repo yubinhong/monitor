@@ -36,12 +36,12 @@ def check_report_data(service_type,hostname,data):
 
     return result
 
-def check_alive(ipaddr):
-    hostobj = models.Host.objects.get(ip_addr=ipaddr)
+def check_alive(host):
+    hostobj = host
     if os.name=='nt':
-        result=subprocess.getstatusoutput('ping -n 1 -w 3 %s' % (ipaddr))
+        result=subprocess.getstatusoutput('ping -n 1 -w 3 %s' % (host.ip_addr))
     elif os.name=='posix':
-        result=subprocess.getstatusoutput('ping -c 1 -w 3 %s' % (ipaddr))
+        result=subprocess.getstatusoutput('ping -c 1 -w 3 %s' % (host.ip_addr))
     if result[0]:
         hostobj.status='down'
         hostobj.save()

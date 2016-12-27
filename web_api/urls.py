@@ -18,5 +18,6 @@ from web_api import views
 urlpatterns = [
     url(r'^get_config/',views.get_config),
     url(r'^report_server_data/',views.report_server_data),
-    url(r'graphs/$', views.graphs_gerator, name='get_graphs')
+    url(r'graphs/$', views.graphs_gerator, name='get_graphs'),
+    url(r'get_hosts_status/$',views.get_hosts_status,name='get_hosts_status'),
 ]

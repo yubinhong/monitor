@@ -5,6 +5,7 @@ from backends.select_data import select_config_data,select_email,select_graph
 from backends.check_data import check_report_data
 from backends.alert import send_mail
 import json
+from backends.check_data import check_alive
 # Create your views here.
 
 def get_config(request):
@@ -54,3 +55,15 @@ def graphs_gerator(request):
     host_id=request.GET.get('host_id')
     result=select_graph(host_id)
     return HttpResponse(json.dumps(result))
+
+def get_hosts_status(request):
+    uid=request.session.get('current_user_id',None)
+    data=[]
+    if uid:
+        #host_list=models.Admin.objects.get(id=uid).select_related().select_related()
+        #userobj=models.Admin.objects.get(id=uid).user
+        #monitorgroup=models.MonitorGroup.objects.get(user=userobj)
+        host_list=models.Host.objects.filter(monitor_groups__user__admin__id=uid)
+        for host in host_list:
+            data.append({'id':host.id,'status':host.status})
+    return HttpResponse(json.dumps(data))

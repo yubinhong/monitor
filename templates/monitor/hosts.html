@@ -82,7 +82,7 @@
 setInterval('get_hosts_status()',20000);
 function get_hosts_status(){
     $.ajax({
-        url:'/get_hosts_status/',
+        url:'/api/get_hosts_status/',
         type:'GET',
         success:function(callback){
             //console.log(callback)
