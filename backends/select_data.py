@@ -19,6 +19,10 @@ def select_email(hostname):
     email=models.Host.objects.get(name=hostname).monitor_groups.user.email
     return email
 
+def select_appkey(hostname):
+    appkey=models.Host.objects.get(name=hostname).monitor_groups.appkey
+    return appkey
+
 def select_failcount(hostname,triggerobj):
     try:
         alertobj=models.Alert.objects.get(hostname=hostname,trigger=triggerobj)

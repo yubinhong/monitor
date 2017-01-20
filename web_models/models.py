@@ -130,7 +130,7 @@ class MonitorGroup(models.Model):
     templates=models.ForeignKey("Templates",blank=True,verbose_name=u"关联模版")
     user = models.OneToOneField("UserInfo", verbose_name=u"监控人")
     memo=models.TextField(u"备注",blank=True,null=True)
-
+    appkey=models.CharField(u"应用ID",max_length=64,unique=True)#这是外部告警用到的appkey
 
     def __str__(self):
         return self.name

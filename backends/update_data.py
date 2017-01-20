@@ -6,3 +6,4 @@ def update_alert(hostname,trigger,fail_count,message):
     alertobj.fail_count=fail_count
     alertobj.message=message
     alertobj.save()
+    return alertobj.id

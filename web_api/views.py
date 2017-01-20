@@ -1,9 +1,9 @@
 from django.shortcuts import render,HttpResponse
 from web_models import models
 from backends.insert_data import insert_report_data
-from backends.select_data import select_config_data,select_email,select_graph
+from backends.select_data import select_config_data,select_email,select_graph,select_appkey
 from backends.check_data import check_report_data
-from backends.alert import send_mail
+from backends.alert import send_mail,send_api
 import json
 from backends.check_data import check_alive
 # Create your views here.
@@ -41,9 +41,11 @@ def report_server_data(request):
         insert_report_data(hostname,service_name,data)
         re=check_report_data(service_name,hostname,data)
         if re['status']:
-            email=select_email(hostname)
+            #email=select_email(hostname)
+            appkey=select_appkey(hostname)
             for content in re['message']:
-                send_mail([email],'alert',content)
+                #send_mail([email],'alert',content)
+                send_api(appkey,content,re['id'],hostname)
 
     except Exception as e:
         result['status']=1

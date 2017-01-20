@@ -24,9 +24,10 @@ def check_report_data(service_type,hostname,data):
             fail_count +=1
             message = 'The host %s %s of %s is %s%%.' % \
                       (hostname, trigger.item.key, service_type, data[trigger.item.key])
-            update_alert(hostname=hostname, trigger=trigger, fail_count=fail_count, message=message)
+            id=update_alert(hostname=hostname, trigger=trigger, fail_count=fail_count, message=message)
             if fail_count >=trigger.count:
                 result['message'].append(message)
+                result['id']=id
         else:
             delete_alert(hostname=hostname, trigger=trigger)
 
