@@ -26,6 +26,14 @@ def insert_report_data(hostname,service_name,data):
         memobj.save()
 
 
+def insert_report_data2(hostname,servicename,data):
+    hostobj=models.Host.objects.get(name=hostname)
+    serviceobj=models.ServiceType.objects.get(name=servicename)
+    for key in data.keys():
+        histobj=models.History(host=hostobj,service=serviceobj,key=key,value=data[key],create_date=time.time())
+        histobj.save()
+
+
 def insert_alert(hostname,trigger,fail_count):
     alertobj=models.Alert(hostname=hostname,trigger=trigger,fail_count=fail_count)
     alertobj.save()

@@ -8,8 +8,9 @@ class Items(models.Model):
     data_type_option=(('float','Float'),('str','Str'),('int','Int'))
     data_type=models.CharField(u"指标数据类型",max_length=50,choices=data_type_option,default='int')
     memo=models.CharField(u"备注",max_length=128,blank=True,null=True)
+    service=models.ForeignKey("ServiceType",verbose_name=u"属于")
     def __str__(self):
-        return "%s.%s" %(self.name,self.key)
+        return "%s.%s" %(self.service.name,self.key)
     class Meta:
         verbose_name=u"监控指标"
         verbose_name_plural=u"监控指标"
@@ -195,5 +196,28 @@ class Alert(models.Model):
     message=models.CharField(max_length=64,default='',blank=True,null=True)
     alert_time=models.DateTimeField(auto_now_add=True)
     latest_time=models.DateTimeField(auto_now=True)
+
+#记录历史数据
+class History(models.Model):
+    host=models.ForeignKey('Host')
+    service=models.ForeignKey('ServiceType')
+    key=models.CharField(max_length=30)
+    value=models.CharField(max_length=30)
+    create_date=models.FloatField()
+
+
+#图形配置
+class Graph(models.Model):
+    host=models.ForeignKey('Host',verbose_name=u'主机')
+    service = models.ForeignKey('ServiceType',verbose_name=u'服务类型')
+    item=models.ManyToManyField('Items',verbose_name=u'监控指标')
+
+    def __str__(self):
+        return "%s的%s" % (self.host.name,self.service.name)
+
+    class Meta:
+        verbose_name = u"图形配置"
+        verbose_name_plural = u"图形配置"
+
 
 

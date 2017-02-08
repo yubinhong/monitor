@@ -52,3 +52,21 @@ def select_graph(host_id):
                 data[trigger.item.key].append([int(i.create_date)*1000,getattr(i, trigger.item.key)])
             result[trigger.service.name] = data
     return result
+
+def select_graph2(host_id):
+    result={}
+    hostobj=models.Host.objects.get(id=host_id)
+    #service_list = hostobj.monitor_groups.templates.services.select_related()
+    graph_list=models.Graph.objects.filter(host=hostobj)
+    for graph in graph_list:
+        key_list=graph.item.select_related()
+        data = {}
+        for key in key_list:
+            data_list = models.History.objects.filter(host=hostobj, service=graph.service,key=key.name)
+            temp = []
+            for i in data_list:
+                temp.append([int(i.create_date)*1000,float(i.value)])
+            data[key.name]=temp
+        result[graph.service.name]=data
+
+    return result

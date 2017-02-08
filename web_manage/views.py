@@ -70,7 +70,7 @@ def host_detail(request,host_id):
     #template=host_obj.monitor_groups.templates
 
     monitored_services['services'] = config
-    count=models.Alert.objects.filter(hostname=host_obj.name)
+    count=models.Alert.objects.filter(hostname=host_obj.name).count()
 
     return render(request,'monitor/host_detail.html',{'host_obj':host_obj,'monitored_services':monitored_services,'count':count})
 
