@@ -208,12 +208,14 @@ class History(models.Model):
 
 #图形配置
 class Graph(models.Model):
+    name=models.CharField(verbose_name=u'图形名称',max_length=64,blank=True)
     host=models.ForeignKey('Host',verbose_name=u'主机')
     service = models.ForeignKey('ServiceType',verbose_name=u'服务类型')
     item=models.ManyToManyField('Items',verbose_name=u'监控指标')
+    times=models.IntegerField(verbose_name=u'倍数',default=1)
 
     def __str__(self):
-        return "%s的%s" % (self.host.name,self.service.name)
+        return "%s的%s" % (self.host.name,self.name)
 
     class Meta:
         verbose_name = u"图形配置"

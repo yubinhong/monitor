@@ -65,8 +65,8 @@ def select_graph2(host_id):
             data_list = models.History.objects.filter(host=hostobj, service=graph.service,key=key.name)
             temp = []
             for i in data_list:
-                temp.append([int(i.create_date)*1000,float(i.value)])
+                temp.append([int(i.create_date)*1000,float(i.value)*graph.times])
             data[key.name]=temp
-        result[graph.service.name]=data
+        result[graph.name]=data
 
     return result
