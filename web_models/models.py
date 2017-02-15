@@ -3,8 +3,7 @@ from django.db import models
 # Create your models here.
 class Items(models.Model):
     name=models.CharField(max_length=50,unique=True)
-    key=models.CharField(max_length=100,help_text="key的名称要与资源表中（如：CPUInfo）的字段对应")
-    #key的名称要与资源表中（如：CPUInfo）的字段对应
+    key=models.CharField(max_length=100,help_text="key的名称要与History表的字段对应")
     data_type_option=(('float','Float'),('str','Str'),('int','Int'))
     data_type=models.CharField(u"指标数据类型",max_length=50,choices=data_type_option,default='int')
     memo=models.CharField(u"备注",max_length=128,blank=True,null=True)
@@ -140,7 +139,8 @@ class MonitorGroup(models.Model):
         verbose_name=u"监控组"
         verbose_name_plural = u"监控组"
 
-
+##################################
+#废弃
 class CPUInfo(models.Model):
     host = models.ForeignKey("Host")
     user = models.FloatField()
@@ -161,7 +161,7 @@ class MemoryInfo(models.Model):
     Buffers=models.IntegerField()
     Cached=models.IntegerField()
     create_date = models.FloatField()
-
+##############################################
 
 class UserInfo(models.Model):
     name=models.CharField(u"用户名",max_length=50)
@@ -187,6 +187,7 @@ class Admin(models.Model):
     class Meta:
         verbose_name=u"登录帐号"
         verbose_name_plural=u"登录帐号"
+
 
 #记录告警信息
 class Alert(models.Model):

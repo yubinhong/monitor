@@ -34,6 +34,9 @@ def select_failcount(hostname,triggerobj):
     return fail_count
 
 
+
+############################################################
+#废弃
 def select_graph(host_id):
     result={}
     hostobj=models.Host.objects.get(id=host_id)
@@ -52,6 +55,8 @@ def select_graph(host_id):
                 data[trigger.item.key].append([int(i.create_date)*1000,getattr(i, trigger.item.key)])
             result[trigger.service.name] = data
     return result
+###########################################################
+
 
 def select_graph2(host_id):
     result={}
